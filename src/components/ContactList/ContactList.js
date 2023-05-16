@@ -1,20 +1,17 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { remove, getContacts } from 'redux/contactsSlice';
-import { getFilterQuery } from 'redux/filterSlice';
+import { deleteContact } from 'redux/operations';
 
+import { getContacts, getFilterQuery } from 'redux/selectors';
 import css from './ContactList.module.css';
 
-const ContactList = () => {
+export default function ContactList() {
   const contacts = useSelector(getContacts);
   const filterQuery = useSelector(getFilterQuery);
   const dispatch = useDispatch();
 
   const removeContact = e => {
     const contactId = e.target.id;
-    const remainingContacts = contacts.filter(
-      contact => contact.id !== contactId
-    );
-    dispatch(remove(remainingContacts));
+    dispatch(deleteContact(contactId));
   };
 
   return contacts.length > 0 ? (
@@ -23,10 +20,10 @@ const ContactList = () => {
         .filter(contact =>
           contact.name.toLowerCase().includes(filterQuery.toLowerCase())
         )
-        .map(({ id, name, number }) => {
+        .map(({ id, name, phone }) => {
           return (
             <li className={css.contactItem} key={id}>
-              {name}: {number}
+              {name}: {phone}
               <button
                 className={css.listItemBtn}
                 id={id}
@@ -45,6 +42,4 @@ const ContactList = () => {
       Add your first contact, please.
     </p>
   );
-};
-
-export default ContactList;
+}

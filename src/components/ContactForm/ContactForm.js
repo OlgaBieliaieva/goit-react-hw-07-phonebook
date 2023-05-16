@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import shortid from 'shortid';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { add, getContacts } from 'redux/contactsSlice';
+import { addContact } from 'redux/operations';
+import { getContacts } from 'redux/selectors';
 import css from './ContactForm.module.css';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
@@ -19,8 +19,8 @@ export default function ContactForm() {
         setName(value);
         break;
 
-      case 'number':
-        setNumber(value);
+      case 'phone':
+        setPhone(value);
         break;
 
       default:
@@ -30,15 +30,14 @@ export default function ContactForm() {
 
   const handleSubmit = e => {
     e.preventDefault(e);
-    createContact(name, number);
+    createContact(name, phone);
     reset();
   };
 
-  const createContact = (name, number) => {
+  const createContact = (name, phone) => {
     const newContact = {
-      id: shortid.generate(),
       name: name,
-      number: number,
+      phone: phone,
     };
     const contactNames = [];
     contacts.map(contact => contactNames.push(contact.name));
@@ -46,7 +45,7 @@ export default function ContactForm() {
     if (contactNames.includes(name)) {
       return alert(`${name} is already in contacts`);
     }
-    dispatch(add(newContact));
+    dispatch(addContact(newContact));
   };
 
   const showMessage = e => {
@@ -56,7 +55,7 @@ export default function ContactForm() {
 
   const reset = () => {
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   return (
@@ -64,7 +63,7 @@ export default function ContactForm() {
       className={css.contactForm}
       onSubmit={handleSubmit}
       name={name}
-      number={number}
+      number={phone}
     >
       <label className={css.formLabel}>
         Name
@@ -87,8 +86,8 @@ export default function ContactForm() {
         <input
           className={css.formInput}
           type="tel"
-          name="number"
-          value={number}
+          name="phone"
+          value={phone}
           onChange={handleChange}
           onFocus={showMessage}
           placeholder="type number here..."

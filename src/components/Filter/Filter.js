@@ -1,8 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { filter, getFilterQuery } from 'redux/filterSlice';
+import { filter } from 'redux/filterSlice';
+import { getFilterQuery } from 'redux/selectors';
 import css from './Filter.module.css';
 
-const Filter = () => {
+export default function Filter() {
   const filterQuery = useSelector(getFilterQuery);
   const dispatch = useDispatch();
 
@@ -10,6 +11,7 @@ const Filter = () => {
     const { value } = e.target;
     dispatch(filter(value));
   };
+
   return (
     <label className={css.formLabel}>
       Find contacts by name
@@ -24,6 +26,4 @@ const Filter = () => {
       />
     </label>
   );
-};
-
-export default Filter;
+}
