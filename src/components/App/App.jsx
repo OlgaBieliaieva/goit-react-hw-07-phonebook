@@ -16,6 +16,7 @@ export default function App() {
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
+
   return (
     <main className={css.appContainer}>
       <SectionTitle text="Phonebook" />
